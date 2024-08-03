@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react";
 import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc} from "firebase/firestore"
 import {db} from './firebase'
-import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton,} from "@mui/material";
+import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton, Divider,} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from "@mui/material/colors";
 
@@ -90,34 +90,49 @@ export default function Home() {
                       }} id="input-amt" label="Enter Quantity" value={newItem.quant || ""} onChange={(e) => setNewItem({...newItem, quant:e.target.value})} type="number"></OutlinedInput>
                 </FormControl>
                 
+                <Button sx={{margin: 1}} onClick={addItem} typeof="submit" color="slate" variant="contained" > 
+                  <Typography align="center" variant="h5" sx={{color:"#FFFFFF"}}>+</Typography> 
+                </Button>
+              </Box>
 
-                <Button sx={{margin: 1}} onClick={addItem} typeof="submit" color="slate" variant="contained" > <Typography align="center" variant="h5" sx={{color:"#FFFFFF"}}>+</Typography> </Button>
+              
+              <Box paddingTop={1} px={2} sx={{justifyContent:"space-between", display:"flex"}}>
+                <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"rgb(2 6 23)"} container spacing={0}>
+                  <Grid xs={10}>
+                        <Grid>Item Name</Grid>
+                  </Grid>
+                  <Grid xs={1} paddingRight={.5}>
+                    <Grid sx={{float:"right"}}>Quantity</Grid>
+                  </Grid>
+                  <Grid xs={1}>
+                    <Grid sx={{float:"right"}}>Delete</Grid>
+                  </Grid>
+                </Grid>
               </Box>
-              {/* Need to finish TABS*/}
-              <Box>
-                SHOWS TABS
-              </Box>
-              <List>
+              
+              <Divider sx={{marginX:2, bgcolor:"#cbd5e1" }} />
+
+              <List sx={{paddingY:0}}>
                 {items.map((item, id) => (
-                  <ListItem  key={id} item sx={{justifyContent:"space-between", display:"flex"}}>
-                    <Box p={2} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
-                      <Grid item>
+                  <>
+                  <ListItem key={id} sx={{justifyContent:"space-between", display:"flex", paddingY:0}}>
+                    <Box py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
+                      <Grid>
                         <Grid textTransform={"capitalize"}>{item.name}</Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid>
                         <Grid>{item.quant}</Grid>
                       </Grid>
                       
                     </Box>
                     <ListItemButton disableElevation sx={{bgcolor:"rgb(2 6 23)", borderLeft:2,  borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} onClick={() => deleteItem(item.id)}>
-                      <Box p={1}>
+                      <Box p={1.5}>
                         X
                       </Box>
                     </ListItemButton>
-
-
                   </ListItem>
-                  
+                  <Divider component="li"sx={{marginX:2, bgcolor:"#475569"}} />
+                  </>
                 ))}
               </List>
               {items.length < 1 ? ('') : (
