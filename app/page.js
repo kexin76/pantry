@@ -99,7 +99,7 @@ export default function Home() {
               </Box>
               <List>
                 {items.map((item, id) => (
-                  <ListItem disablePadding key={id} item sx={{justifyContent:"space-between", display:"flex"}}>
+                  <ListItem  key={id} item sx={{justifyContent:"space-between", display:"flex"}}>
                     <Box p={2} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
                       <Grid item>
                         <Grid textTransform={"capitalize"}>{item.name}</Grid>
