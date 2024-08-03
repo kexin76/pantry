@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react";
 import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc} from "firebase/firestore"
 import {db} from './firebase'
-import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem,} from "@mui/material";
+import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton,} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from "@mui/material/colors";
 
@@ -99,27 +99,27 @@ export default function Home() {
               </Box>
               <List>
                 {items.map((item, id) => (
-                  <ListItem key={id} item sx={{justifyContent:"space-between"}}>
+                  <ListItem disablePadding key={id} item sx={{justifyContent:"space-between", display:"flex"}}>
                     <Box p={2} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
-                      <Grid item xs={8}>
+                      <Grid item>
                         <Grid textTransform={"capitalize"}>{item.name}</Grid>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item>
                         <Grid>{item.quant}</Grid>
                       </Grid>
                       
                     </Box>
-                    {/* FIX SIZING */}
-                    <Button  sx={{borderLeft:2, borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} disableElevation variant="contained" onClick={() => deleteItem(item.id)}>
-                      <Typography align="center" sx={{color:"white"}}>X</Typography>
-                    </Button>
+                    <ListItemButton disableElevation sx={{bgcolor:"rgb(2 6 23)", borderLeft:2,  borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} onClick={() => deleteItem(item.id)}>
+                      <Box p={1}>
+                        X
+                      </Box>
+                    </ListItemButton>
+
+
                   </ListItem>
                   
                 ))}
               </List>
-              
-                
-
               {items.length < 1 ? ('') : (
                 <div className="flex justify-between p-3">
                   <span>Total Amount of Items</span>
