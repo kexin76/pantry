@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react";
 import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc} from "firebase/firestore"
 import {db} from './firebase'
-import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid} from "@mui/material";
+import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem,} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from "@mui/material/colors";
 
@@ -77,7 +77,7 @@ export default function Home() {
                 <FormControl sx={{color: "black", flexGrow: 1, margin: 1}}>
                     <InputLabel style={{ color: 'black' }}  sx={{shrink: true,}} htmlFor="input-item" type="text">Enter Item</InputLabel>
                     <OutlinedInput id="input-item" sx={{
-                      "&:not(:hover) .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
+                      "&:not(:hover) > .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
                       "&:hover > .MuiOutlinedInput-notchedOutline" :{borderColor: "black"},
                       }} label="Enter Item" value={newItem.name || ""} onChange={(e) => setNewItem({...newItem, name:e.target.value})} type="text"/>
                 </FormControl>
@@ -85,7 +85,7 @@ export default function Home() {
                 <FormControl sx={{color: "black", flexGrow: 1, margin: 1}}>
                     <InputLabel style={{ color: 'black' }}  sx={{shrink: true,}} htmlFor="input-amt" type="number">Enter Quantity</InputLabel>
                     <OutlinedInput sx={{
-                      "&:not(:hover) .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
+                      "&:not(:hover) > .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
                       "&:hover > .MuiOutlinedInput-notchedOutline" :{borderColor: "black"},
                       }} id="input-amt" label="Enter Quantity" value={newItem.quant || ""} onChange={(e) => setNewItem({...newItem, quant:e.target.value})} type="number"></OutlinedInput>
                 </FormControl>
@@ -93,32 +93,33 @@ export default function Home() {
 
                 <Button sx={{margin: 1}} onClick={addItem} typeof="submit" color="slate" variant="contained" > <Typography align="center" variant="h5" sx={{color:"#FFFFFF"}}>+</Typography> </Button>
               </Box>
-              {/* Need to finish */}
+              {/* Need to finish TABS*/}
               <Box>
                 SHOWS TABS
               </Box>
-              {items.map((item, id) => (
-                <Grid key={id} item xs={12} sx={{justifyContent: "just"}}>
-
-                </Grid>
-              ))}
-
-              <ul>
+              <List>
                 {items.map((item, id) => (
-                  <li key={id} className="my-4 w-full flex justify-between bg-slate-950">
-                    <div className="p-4 w-full flex justify-between">
-                      <span className="capitalize">{item.name}</span>
-                      <span>{item.quant}</span>
-                    </div>
-                    <button onClick={() => deleteItem(item.id)} className="ml-8 p-4 border-l-2 border-slate-900 hover:bg-slate-900 w-16">X</button>
-                    <Button variant="contained" sx={{margin:1, paddingX:2, paddingY:0, color:"green", bgcolor:"black",fontWeight: 'medium'}} onClick={updateItem}> 
-                      <Typography  sx={{margin:1,  textTransform: 'capitalize', }}>
-                        Edit Pantry
-                      </Typography> 
+                  <ListItem key={id} item sx={{justifyContent:"space-between"}}>
+                    <Box p={2} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
+                      <Grid item xs={8}>
+                        <Grid textTransform={"capitalize"}>{item.name}</Grid>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Grid>{item.quant}</Grid>
+                      </Grid>
+                      
+                    </Box>
+                    {/* FIX SIZING */}
+                    <Button  sx={{borderLeft:2, borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} disableElevation variant="contained" onClick={() => deleteItem(item.id)}>
+                      <Typography align="center" sx={{color:"white"}}>X</Typography>
                     </Button>
-                  </li>
+                  </ListItem>
+                  
                 ))}
-              </ul>
+              </List>
+              
+                
+
               {items.length < 1 ? ('') : (
                 <div className="flex justify-between p-3">
                   <span>Total Amount of Items</span>
