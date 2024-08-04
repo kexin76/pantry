@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react";
 import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc, setDoc, updateDoc} from "firebase/firestore"
 import {db} from './firebase'
-import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton, Divider, ToggleButton, TextField,} from "@mui/material";
+import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton, Divider, ToggleButton, TextField, colors,} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function Home() {
@@ -57,17 +57,20 @@ export default function Home() {
   const [selectEdit, setSelectEdit] = useState(false)
   function clickEdit() {
     setSelectEdit(!selectEdit);
-    console.log(selectEdit);
   };
 
   // Needs fixing
-  const updateQuant = async (id, e) => {
-    if(e != ""){
+  const updateQuant = async (id, quant) => {
+    const before = items.quant;
+    if(quant != "" && quant != null){
       await updateDoc(doc(db, "items", id), {
-        quant: e
+        quant: quant
+      });
+    }else{
+      await updateDoc(doc(db, "items", id), {
+        quant: before
       });
     }
-
   }
   
 
@@ -85,21 +88,21 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container sx={{ height: "100vh"}}>
-        <Box display="flex" sx={{flexDirection: "column", align: "center", p:10}}>
-          <Box maxWidth={"64 rem"} fontSize={14} sx={{alignItems: "center", fontFamily: "monospace", justifyContent: "space-between", width:"100%"}}>
+      <Container sx={{ height: "100vh", bgcolor:"#392C29"}}>
+        <Box display="flex" sx={{flexDirection: "column", align: "center", p:10,}}>
+          <Box maxWidth={"64 rem"} fontSize={14} sx={{alignItems: "center", fontFamily: "monospace", justifyContent: "space-between", width:"100%",}}>
             <Typography align="center" variant="h2" sx={{fontFamily: "Segoe UI Emoji",}}>Pantry</Typography>
             <br/><br/>
 
             {/* Enter Item and Quanity. And Submit button */}
-            <Box padding={2} bgcolor={"#708090"} sx={{borderRadius: 2,}}>
+            <Box padding={2} bgcolor={"#7A4F44"} sx={{borderRadius: 2,}}>
               <Box display="flex">
                 <FormControl sx={{color: "black", flexGrow: 1, margin: 1}}>
                     <InputLabel style={{ color: 'black' }}  sx={{shrink: true,}} htmlFor="input-item" type="text">Enter Item</InputLabel>
                     <OutlinedInput id="input-item" sx={{
                       "&:not(:hover) > .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
                       "&:hover > .MuiOutlinedInput-notchedOutline" :{borderColor: "black"},
-                      }} label="Enter Item" value={newItem.name || ""} onChange={(e) => setNewItem({...newItem, name:e.target.value})} type="text"/>
+                      }} label="Enter Item" value={newItem.name || ""} onChange={(e) => setNewItem({...newItem, name:e.target.value.toLowerCase()})} type="text"/>
                 </FormControl>
 
                 <FormControl sx={{color: "black", flexGrow: 1, margin: 1}}>
@@ -110,7 +113,7 @@ export default function Home() {
                       }} id="input-amt" label="Enter Quantity" value={newItem.quant || ""} onChange={(e) => setNewItem({...newItem, quant:e.target.value})} type="number"></OutlinedInput>
                 </FormControl>
                 
-                <Button sx={{margin: 1}} onClick={addItem} typeof="submit" color="slate" variant="contained" > 
+                <Button sx={{margin: 1, bgcolor:"#292026"}} onClick={addItem} typeof="submit" color="slate" variant="contained" > 
                   <Typography align="center" variant="h5" sx={{color:"#FFFFFF"}}>+</Typography> 
                 </Button>
               </Box>
@@ -129,7 +132,7 @@ export default function Home() {
               
               {/* Header for list */}
               <Box paddingTop={1} px={2} sx={{justifyContent:"space-between", display:"flex"}}>
-                <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"rgb(2 6 23)"} container spacing={0}>
+                <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"#546A4D"} container spacing={0}>
                   <Grid xs={10}>
                         <Grid>Item Name</Grid>
                   </Grid>
@@ -149,20 +152,14 @@ export default function Home() {
                 {filteredItems.map((item, id) => (
                   <>
                   <ListItem key={id} sx={{justifyContent:"space-between", display:"flex", paddingY:0}}>
-                    <Box py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
+                    <Box py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"#292026"} display={"flex"} justifyContent={"space-between"}>
                       <Grid>
                         <Grid textTransform={"capitalize"}>{item.name}</Grid>
                       </Grid>
 
                       <Grid>
                         {selectEdit == false ? <Grid>{item.quant}</Grid> : 
-                        // <TextField label="Search" variant="standard" size="small" color="slate" sx={{bgcolor:"#a1a1aa", borderColor:"#a1a1aa",}} />
-                        <>
-                          <label for="editQuant"></label>
-                          {/* Needs fixing I think */}
-                          <input type="text" id="editQuant" onChange={(e) => updateQuant(item.id, e)} placeholder={item.quant} className="bg-slate-700 rounded-md" />
-                        </>
-                        
+                          <input type="number" id="editQuant" onChange={(e) => updateQuant(item.id, e.target.value)} placeholder={item.quant} className="bg-slate-700 rounded-md w-14 placeholder: text-center " />
                         }
                         
                       </Grid>
@@ -179,12 +176,15 @@ export default function Home() {
               </List>
 
               {/* Total amount of items */}
+
               {items.length < 1 ? ('') : (
-                <div className="flex justify-between p-3">
-                  <span>Total Amount of Items</span>
-                  <span>{total}</span>
-                  <span>{selectEdit}</span>
-                </div>
+                <Box py={2.5} px={2}>
+                  <Box padding={2} sx={{display: "inline-flex", bgcolor:"rgb(0 0 0)", borderRadius: 3, bgcolor:"#546A4D"}} justifyContent={"space-between"}>
+                    <Box>Total Amount of Items:</Box>
+                    <Box pl={2}>{total}</Box>
+                    
+                  </Box>
+                </Box>
               )}
             </Box>
           </Box>
