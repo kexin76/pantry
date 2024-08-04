@@ -61,14 +61,9 @@ export default function Home() {
 
   // Needs fixing
   const updateQuant = async (id, quant) => {
-    const before = items.quant;
     if(quant != "" && quant != null){
       await updateDoc(doc(db, "items", id), {
         quant: quant
-      });
-    }else{
-      await updateDoc(doc(db, "items", id), {
-        quant: before
       });
     }
   }
@@ -88,16 +83,17 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container sx={{ height: "100vh", bgcolor:"#392C29"}}>
+      <Box sx={{bgcolor:"#392C29"}}>
+      <Container sx={{ height: "100vh",}}>
         <Box display="flex" sx={{flexDirection: "column", align: "center", p:10,}}>
           <Box maxWidth={"64 rem"} fontSize={14} sx={{alignItems: "center", fontFamily: "monospace", justifyContent: "space-between", width:"100%",}}>
-            <Typography align="center" variant="h2" sx={{fontFamily: "Segoe UI Emoji",}}>Pantry</Typography>
+            <Typography align="center" variant="h2" sx={{fontFamily: "Segoe UI Emoji", color:"#D9F3EF"}}>Pantry</Typography>
             <br/><br/>
 
             {/* Enter Item and Quanity. And Submit button */}
             <Box padding={2} bgcolor={"#7A4F44"} sx={{borderRadius: 2,}}>
               <Box display="flex">
-                <FormControl sx={{color: "black", flexGrow: 1, margin: 1}}>
+                <FormControl sx={{ flexGrow: 1, margin: 1}}>
                     <InputLabel style={{ color: 'black' }}  sx={{shrink: true,}} htmlFor="input-item" type="text">Enter Item</InputLabel>
                     <OutlinedInput id="input-item" sx={{
                       "&:not(:hover) > .MuiOutlinedInput-notchedOutline" : {borderColor:"black"},
@@ -121,10 +117,10 @@ export default function Home() {
               {/* Search and Edit */}
               <Grid>
                 <Grid py={1} px={2} >
-                  <TextField value={searchInput || ""} onChange={(e) => {setSearchInput(e.target.value)}} label="Search" variant="filled" size="small" color="slate" sx={{bgcolor:"#a1a1aa", borderColor:"#a1a1aa", borderRadius:1,}} />
+                  <TextField value={searchInput || ""} onChange={(e) => {setSearchInput(e.target.value)}} label="Search" variant="filled" size="small" color="slate" sx={{bgcolor:"#C5D2AE", borderColor:"#292026", borderRadius:1,}} />
                   
                   {/* Make edit button functional */}
-                  <ToggleButton onClick={clickEdit} sx={{bgcolor:"#166534", paddingX:3, py:1, float:"right"}}>
+                  <ToggleButton onClick={clickEdit} sx={{bgcolor:"#95A070", "&:hover":{bgcolor: "#C5D2AE"}, paddingX:3, py:1, float:"right"}}>
                     <Typography variant="h6">Edit</Typography> 
                   </ToggleButton>
                 </Grid>
@@ -132,7 +128,7 @@ export default function Home() {
               
               {/* Header for list */}
               <Box paddingTop={1} px={2} sx={{justifyContent:"space-between", display:"flex"}}>
-                <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"#546A4D"} container spacing={0}>
+                <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"#546A4D"} color={"#D9F3EF"} container spacing={0}>
                   <Grid xs={10}>
                         <Grid>Item Name</Grid>
                   </Grid>
@@ -152,7 +148,7 @@ export default function Home() {
                 {filteredItems.map((item, id) => (
                   <>
                   <ListItem key={id} sx={{justifyContent:"space-between", display:"flex", paddingY:0}}>
-                    <Box py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"#292026"} display={"flex"} justifyContent={"space-between"}>
+                    <Box color={"#D9F3EF"} py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"#292026"} display={"flex"} justifyContent={"space-between"}>
                       <Grid>
                         <Grid textTransform={"capitalize"}>{item.name}</Grid>
                       </Grid>
@@ -164,8 +160,8 @@ export default function Home() {
                         
                       </Grid>
                     </Box>
-                    <ListItemButton disableElevation sx={{bgcolor:"rgb(2 6 23)", borderLeft:2,  borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} onClick={() => deleteItem(item.id)}>
-                      <Box p={1.5}>
+                    <ListItemButton disableElevation sx={{ borderLeft:2,  borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"#292026"} , "&:hover": {bgcolor:"#3e363b",}}} onClick={() => deleteItem(item.id)}>
+                      <Box color={"#D9F3EF"} p={1.5}>
                         X
                       </Box>
                     </ListItemButton>
@@ -191,6 +187,7 @@ export default function Home() {
         </Box>
 
       </Container>
+      </Box>
     </ThemeProvider>
 
   );
