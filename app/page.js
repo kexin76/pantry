@@ -1,8 +1,8 @@
 'use client';
 import React, {useState, useEffect} from "react";
-import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc} from "firebase/firestore"
+import { collection, addDoc, getDoc, QuerySnapshot, query, onSnapshot, deleteDoc, doc,} from "firebase/firestore"
 import {db} from './firebase'
-import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton, Divider,} from "@mui/material";
+import { Box, Container, FormControl, InputLabel, Typography, Input, FormGroup, Button, OutlinedInput, Grid, List, ListItem, ListItemButton, Divider, ToggleButton, TextField,} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue } from "@mui/material/colors";
 
@@ -55,6 +55,10 @@ export default function Home() {
 
   };
 
+  const [searchInput, setSearchInput] = useState("")
+  const filteredItems = items.filter(item => item.name.toLowerCase().startsWith(searchInput.toLowerCase()));
+
+
   // Theme / Color Maker
   const { palette } = createTheme();
   const { augmentColor } = palette;
@@ -95,7 +99,18 @@ export default function Home() {
                 </Button>
               </Box>
 
-              
+              {/* Edit button and search bar */}
+
+              <Grid>
+                <Grid py={1} px={2} >
+                  <TextField value={searchInput || ""} onChange={(e) => {setSearchInput(e.target.value)}} label="Search" variant="filled" size="small" color="slate" sx={{bgcolor:"#a1a1aa", borderColor:"#a1a1aa", borderRadius:1,}} />
+                  
+                  <ToggleButton sx={{bgcolor:"#166534", paddingX:3, py:1, float:"right"}}>
+                    <Typography variant="h6">Edit</Typography> 
+                  </ToggleButton>
+                </Grid>
+              </Grid>
+
               <Box paddingTop={1} px={2} sx={{justifyContent:"space-between", display:"flex"}}>
                 <Grid py={3/2} paddingLeft={2} paddingRight={1} bgcolor={"rgb(2 6 23)"} container spacing={0}>
                   <Grid xs={10}>
@@ -113,7 +128,7 @@ export default function Home() {
               <Divider sx={{marginX:2, bgcolor:"#cbd5e1" }} />
 
               <List sx={{paddingY:0}}>
-                {items.map((item, id) => (
+                {filteredItems.map((item, id) => (
                   <>
                   <ListItem key={id} sx={{justifyContent:"space-between", display:"flex", paddingY:0}}>
                     <Box py={2.5} paddingLeft={2} paddingRight={3.5} width={"100%"} bgcolor={"rgb(2 6 23)"} display={"flex"} justifyContent={"space-between"}>
@@ -123,7 +138,6 @@ export default function Home() {
                       <Grid>
                         <Grid>{item.quant}</Grid>
                       </Grid>
-                      
                     </Box>
                     <ListItemButton disableElevation sx={{bgcolor:"rgb(2 6 23)", borderLeft:2,  borderColor:"#0f172a", "&:not(:hover)":{bgcolor:"rgb(2 6 23)"} , "&:hover": {bgcolor:"#0f172a",}}} onClick={() => deleteItem(item.id)}>
                       <Box p={1.5}>
@@ -139,6 +153,7 @@ export default function Home() {
                 <div className="flex justify-between p-3">
                   <span>Total Amount of Items</span>
                   <span>{total}</span>
+                  <span>{searchInput}</span>
                 </div>
               )}
             </Box>
